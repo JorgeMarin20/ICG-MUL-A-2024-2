@@ -138,3 +138,8 @@ function toggleCentroid() {
 
 // Generar la primera figura al cargar la página
 generatePolygon();
+
+
+
+
+
