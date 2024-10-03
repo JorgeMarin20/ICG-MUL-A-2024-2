@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figura Vectorizada</title>
+    <style>
+        svg {
+            border: 1px solid black;
+            width: 500px;
+            height: 500px;
+        }
+        .point {
+            fill: red;
+        }
+        .centroid-line {
+            stroke: blue;
+            stroke-width: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generador de Figuras Vectorizadas</h1>
+    <button onclick="generatePolygon()">Generar nueva figura</button>
+    <button onclick="toggleCentroid()">Mostrar/Ocultar centroide</button>
+    <br><br>
+    <svg id="svgCanvas" viewBox="0 0 500 500"></svg>
+
+    <script src="vectorizado.js"></script>
+</body>
+</html>
