@@ -1,0 +1,204 @@
+//Parte de java actualizadfo con bresenham
+// Clase Punto con encapsulamiento real
+class Punto {
+    #x;
+    #y;
+
+    constructor(x, y) {
+        this.#x = x;
+        this.#y = y;
+    }
+
+    get x() {
+        return this.#x;
+    }
+
+    get y() {
+        return this.#y;
+    }
+
+    set x(value) {
+        this.#x = value;
+    }
+
+    set y(value) {
+        this.#y = value;
+    }
+}
+
+// Clase Linea con algoritmo de Bresenham para líneas
+class Linea {
+    #puntoInicio;
+    #puntoFin;
+
+    constructor(puntoInicio, puntoFin) {
+        this.#puntoInicio = puntoInicio;
+        this.#puntoFin = puntoFin;
+    }
+
+    // Dibuja la línea usando el algoritmo de Bresenham
+    dibujar(context) {
+        let x0 = this.#puntoInicio.x;
+        let y0 = this.#puntoInicio.y;
+        let x1 = this.#puntoFin.x;
+        let y1 = this.#puntoFin.y;
+
+        let dx = Math.abs(x1 - x0);
+        let dy = Math.abs(y1 - y0);
+        let sx = (x0 < x1) ? 1 : -1;
+        let sy = (y0 < y1) ? 1 : -1;
+        let err = dx - dy;
+
+        while (true) {
+            context.fillRect(x0, y0, 1, 1); // Dibuja un píxel en la posición actual
+            if (x0 === x1 && y0 === y1) break;
+
+            let e2 = 2 * err;
+            if (e2 > -dy) {
+                err -= dy;
+                x0 += sx;
+            }
+            if (e2 < dx) {
+                err += dx;
+                y0 += sy;
+            }
+        }
+    }
+}
+
+// Clase Circunferencia con algoritmo de Bresenham para circunferencias
+class Circunferencia {
+    #centro;
+    #radio;
+
+    constructor(centro, radio) {
+        this.#centro = centro;
+        this.#radio = radio;
+    }
+
+    // Dibuja la circunferencia usando el algoritmo de Bresenham
+    dibujar(context) {
+        let x0 = this.#centro.x;
+        let y0 = this.#centro.y;
+        let r = this.#radio;
+
+        let x = 0;
+        let y = r;
+        let d = 3 - 2 * r;
+
+        while (y >= x) {
+            this.#dibujarPuntos(context, x0, y0, x, y);
+            x++;
+            if (d > 0) {
+                y--;
+                d = d + 4 * (x - y) + 10;
+            } else {
+                d = d + 4 * x + 6;
+            }
+            this.#dibujarPuntos(context, x0, y0, x, y);
+        }
+    }
+
+    #dibujarPuntos(context, x0, y0, x, y) {
+        context.fillRect(x0 + x, y0 + y, 1, 1);
+        context.fillRect(x0 - x, y0 + y, 1, 1);
+        context.fillRect(x0 + x, y0 - y, 1, 1);
+        context.fillRect(x0 - x, y0 - y, 1, 1);
+        context.fillRect(x0 + y, y0 + x, 1, 1);
+        context.fillRect(x0 - y, y0 + x, 1, 1);
+        context.fillRect(x0 + y, y0 - x, 1, 1);
+        context.fillRect(x0 - y, y0 - x, 1, 1);
+    }
+}
+
+// Nueva Clase Elipse con algoritmo de Bresenham para elipses
+class Elipse {
+    #centro;
+    #radioX;
+    #radioY;
+
+    constructor(centro, radioX, radioY) {
+        this.#centro = centro;
+        this.#radioX = radioX;
+        this.#radioY = radioY;
+    }
+
+    // Dibuja la elipse usando el algoritmo de Bresenham adaptado
+    dibujar(context) {
+        let x0 = this.#centro.x;
+        let y0 = this.#centro.y;
+        let rx = this.#radioX;
+        let ry = this.#radioY;
+
+        let x = 0;
+        let y = ry;
+        let rxSq = rx * rx;
+        let rySq = ry * ry;
+        let rxSqTwo = 2 * rxSq;
+        let rySqTwo = 2 * rySq;
+
+        let p = Math.round(rySq - (rxSq * ry) + (0.25 * rxSq));
+        let px = 0;
+        let py = rxSqTwo * y;
+
+        // Dibujar la primera región de la elipse
+        while (px < py) {
+            this.#dibujarPuntos(context, x0, y0, x, y);
+            x++;
+            px += rySqTwo;
+            if (p < 0) {
+                p += rySq + px;
+            } else {
+                y--;
+                py -= rxSqTwo;
+                p += rySq + px - py;
+            }
+        }
+
+        // Segunda región
+        p = Math.round(rySq * (x + 0.5) * (x + 0.5) + rxSq * (y - 1) * (y - 1) - rxSq * rySq);
+        px = 0;
+        py = rxSqTwo * y;
+        while (y > 0) {
+            this.#dibujarPuntos(context, x0, y0, x, y);
+            y--;
+            py -= rxSqTwo;
+            if (p > 0) {
+                p += rxSq - py;
+            } else {
+                x++;
+                px += rySqTwo;
+                p += rxSq + px - py;
+            }
+        }
+    }
+
+    #dibujarPuntos(context, x0, y0, x, y) {
+        context.fillRect(x0 + x, y0 + y, 1, 1);
+        context.fillRect(x0 - x, y0 + y, 1, 1);
+        context.fillRect(x0 + x, y0 - y, 1, 1);
+        context.fillRect(x0 - x, y0 - y, 1, 1);
+    }
+}
+
+// Ejemplo de uso de las clases
+window.onload = function() {
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
+
+    // Crear puntos de inicio y fin para la línea
+    const puntoInicio = new Punto(50, 50);
+    const puntoFin = new Punto(200, 200);
+    const linea = new Linea(puntoInicio, puntoFin);
+    linea.dibujar(context);  // Dibujar línea con Bresenham
+
+    // Crear circunferencia
+    const centroCircunferencia = new Punto(300, 300);
+    const circunferencia = new Circunferencia(centroCircunferencia, 100);
+    circunferencia.dibujar(context);  // Dibujar circunferencia con Bresenham
+
+    // Crear elipse
+    const centroElipse = new Punto(150, 350);
+    const elipse = new Elipse(centroElipse, 80, 50);
+    elipse.dibujar(context);  // Dibujar elipse con Bresenham
+};
