@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Figuras Rasterizadas</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+      width: 100%;
+      height: 500px;
+    }
+    .point {
+      fill: red;
+    }
+    .centroid {
+      fill: blue;
+      stroke: blue;
+      stroke-width: 2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Generador de Figuras Rasterizadas</h1>
+  <button onclick="generatePolygon()" title="Generar una nueva figura aleatoria">Generar nueva figura</button>
+  <button onclick="toggleCentroid()" title="Mostrar u ocultar el centroide">Mostrar/Ocultar centroide</button>
+  <br><br>
+  <canvas id="canvas" width="500" height="500"></canvas>
+  <p id="tipoPoligono">La figura es: </p> <script src="rasterizado.js"></script>
+</body>
+</html>
